@@ -1,0 +1,21 @@
+.typing-text {
+  letter-spacing: 0.15em;
+  font-size: 1rem;
+  font-weight: 700;
+}
+
+/* .typing-text::first-letter {
+  color: orange;
+  font-size: 200%;
+} */
+
+#cursor {
+  border-left: 0.2rem solid orange;
+  animation: blink 0.7s steps(1) infinite;
+}
+
+@keyframes blink {
+  50% {
+    border-color: transparent;
+  }
+}
