@@ -1,7 +1,13 @@
 .typing-text {
   letter-spacing: 0.15em;
-  font-size: 1rem;
+  font-size: 1.5rem;
   font-weight: 700;
+}
+
+@media screen and (max-width: 420px) {
+  .typing-text {
+    font-size: 1rem;
+  }
 }
 
 /* .typing-text::first-letter {

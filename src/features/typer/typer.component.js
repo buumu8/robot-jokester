@@ -1,10 +1,17 @@
 import React from "react";
+import { connect } from "react-redux";
+import { createStructuredSelector } from "reselect";
 import "./typer.css";
 
-const TYPING_SPEED = 150;
-const DELETING_SPEED = 30;
+import { isTypingFinished, selectTyping } from "../joke/joke.slice";
+
+const TYPING_SPEED = 80;
+const DELETING_SPEED = 10;
 
 class Typer extends React.Component {
+  constructor(props) {
+    super();
+  }
   state = {
     text: "",
     isDeleting: false,
@@ -17,9 +24,14 @@ class Typer extends React.Component {
   }
 
   handleType = () => {
-    const { dataText } = this.props;
-    const { isDeleting, loopNum, text, typingSpeed } = this.state;
-    const i = loopNum % dataText.length;
+    const {
+      dataText = ["Something isn't right ..."],
+      isTypingFinished,
+      typing,
+    } = this.props;
+
+    const { isDeleting, text, typingSpeed } = this.state;
+    const i = dataText.length - 1;
     const fullText = dataText[i];
 
     this.setState({
@@ -29,15 +41,18 @@ class Typer extends React.Component {
       typingSpeed: isDeleting ? DELETING_SPEED : TYPING_SPEED,
     });
 
+    if (!isDeleting && text === fullText && typing) {
+      isTypingFinished();
+    }
+
     // if (!isDeleting && text === fullText) {
     //   setTimeout(() => this.setState({ isDeleting: true }), 500);
     // } else
-    if (isDeleting && text === "") {
-      this.setState({
-        isDeleting: false,
-        loopNum: loopNum + 1,
-      });
-    }
+    // if (isDeleting && text === "") {
+    //   this.setState({
+    //     isDeleting: false,
+    //   });
+    // }
 
     setTimeout(this.handleType, typingSpeed);
   };
@@ -54,4 +69,14 @@ class Typer extends React.Component {
   }
 }
 
-export default Typer;
+const mapDispatchToProps = (dispatch) => {
+  return {
+    isTypingFinished: () => dispatch(isTypingFinished()),
+  };
+};
+
+const mapStateToProps = createStructuredSelector({
+  typing: selectTyping,
+});
+
+export default connect(mapStateToProps, mapDispatchToProps)(Typer);
